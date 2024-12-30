@@ -30,7 +30,7 @@ CATEGORY_URLS = [
 ]
 ARTICLE_LINK_PREFIX = "/a/"  # Adjust based on URL structure
 SLEEP_TIME = 1  # Seconds to wait between requests
-DATA_DIR = "data"
+DATA_DIR = "seo_assistant/data"
 SCRAPED_DATA_FILE = os.path.join(DATA_DIR, "articles_metadata.csv")
 FAISS_INDEX_FILE = os.path.join(DATA_DIR, "faiss_index.bin")
 
@@ -190,71 +190,70 @@ def load_metadata(file_path: str = SCRAPED_DATA_FILE) -> pd.DataFrame:
 
 def main():
     st.title("Asystent SEO")
-    menu = ["Stwórz bazę artykułów", "Przeszukaj artykuły"]
-    choice = st.sidebar.selectbox("Menu", menu)
+    # menu = ["Stwórz bazę artykułów", "Przeszukaj artykuły"]
+    # choice = st.sidebar.selectbox("Menu", menu)
 
-    if choice == "Stwórz bazę artykułów":
-        st.header("Stwórz bazę artykułów")
-        if st.button("Rozpocznij ściąganie i stwórz bazę"):
-            with st.spinner('Ściąganie artykułów...'):
-                articles = scrape_all_articles(CATEGORY_URLS, BASE_URL)
-                if articles:
-                    df = save_scraped_data(articles, SCRAPED_DATA_FILE)
-                else:
-                    st.error("Nie ściągnięto artykułów.")
-                    return
+    # if choice == "Stwórz bazę artykułów":
+    #     st.header("Stwórz bazę artykułów")
+    #     if st.button("Rozpocznij ściąganie i stwórz bazę"):
+    #         with st.spinner('Ściąganie artykułów...'):
+    #             articles = scrape_all_articles(CATEGORY_URLS, BASE_URL)
+    #             if articles:
+    #                 df = save_scraped_data(articles, SCRAPED_DATA_FILE)
+    #             else:
+    #                 st.error("Nie ściągnięto artykułów.")
+    #                 return
 
-            with st.spinner('Tworzenie embedding-ów...'):
-                texts = df['content'].fillna("").tolist()
-                embeddings = generate_embeddings(texts)
-                st.success("Embeddingi stworzone.")
+    #         with st.spinner('Tworzenie embedding-ów...'):
+    #             texts = df['content'].fillna("").tolist()
+    #             embeddings = generate_embeddings(texts)
+    #             st.success("Embeddingi stworzone.")
 
-            with st.spinner('Tworzenie indeksu FAISS...'):
-                index = create_faiss_index(embeddings)
-                save_faiss_index(index, FAISS_INDEX_FILE)
-                st.success("Indeks FAISS stworzony.")
+    #         with st.spinner('Tworzenie indeksu FAISS...'):
+    #             index = create_faiss_index(embeddings)
+    #             save_faiss_index(index, FAISS_INDEX_FILE)
+    #             st.success("Indeks FAISS stworzony.")
 
-            st.balloons()
+    #         st.balloons()
 
-    elif choice == "Przeszukaj artykuły":
-        st.header("Znajdź podobne artykuły")
-        index = load_faiss_index(FAISS_INDEX_FILE)
-        metadata = load_metadata(SCRAPED_DATA_FILE)
+    # elif choice == "Przeszukaj artykuły":
+    st.header("Znajdź podobne artykuły")
+    index = load_faiss_index(FAISS_INDEX_FILE)
+    metadata = load_metadata(SCRAPED_DATA_FILE)
 
-        if index is None or metadata.empty:
-            st.error("Proszę najpierw stworzyć bazę.")
-            return
+    if index is None or metadata.empty:
+        st.error("Proszę najpierw stworzyć bazę.")
+        return
 
-        # Only "By Input Text" search mode is retained
-        input_text = st.text_area("Podaj tekst by znaleźć podobne artykuły:", height=200)
-        if st.button("Znajdź Podobne Artykuły"):
-            if not input_text.strip():
-                st.error("Proszę podać tekst bazowy.")
-            else:
-                with st.spinner('Tworzenie embedding-u i wyszukiwanie podobnych artykułów...'):
-                    query_embedding = generate_embeddings([input_text]).astype('float32')
-                    D, I = index.search(query_embedding, 5)
+    # Only "By Input Text" search mode is retained
+    input_text = st.text_area("Podaj tekst by znaleźć podobne artykuły:", height=200)
+    if st.button("Znajdź Podobne Artykuły"):
+        if not input_text.strip():
+            st.error("Proszę podać tekst bazowy.")
+        else:
+            with st.spinner('Tworzenie embedding-u i wyszukiwanie podobnych artykułów...'):
+                query_embedding = generate_embeddings([input_text]).astype('float32')
+                D, I = index.search(query_embedding, 5)
                     
-                    # Convert distances to similarity scores (optional scaling)
-                    # Assuming L2 distance, smaller distance means higher similarity
-                    # To visualize, we can invert and normalize them
-                    distances = D[0]
-                    max_distance = distances.max() if distances.max() != 0 else 1
-                    similarities = [(1 - (dist / max_distance)) for dist in distances]
+                # Convert distances to similarity scores (optional scaling)
+                # Assuming L2 distance, smaller distance means higher similarity
+                # To visualize, we can invert and normalize them
+                distances = D[0]
+                max_distance = distances.max() if distances.max() != 0 else 1
+                similarities = [(1 - (dist / max_distance)) for dist in distances]
 
-                    similar_articles = metadata.iloc[I[0]]
-                    similar_articles = similar_articles.copy()
-                    similar_articles['similarity'] = similarities
+                similar_articles = metadata.iloc[I[0]]
+                similar_articles = similar_articles.copy()
+                similar_articles['similarity'] = similarities
 
-                    st.write("### Podobne artykuły:")
-                    for idx, row in similar_articles.iterrows():
-                        similarity_percentage = row['similarity'] * 100
-                        st.markdown(f"**[{row['heading']}]({row['url']})**")
-                        st.progress(similarity_percentage / 100)
-                        st.write(f"Podobieństwo *semantyczne*: {similarity_percentage:.2f}%")
+                st.write("### Podobne artykuły:")
+                for idx, row in similar_articles.iterrows():
+                    similarity_percentage = row['similarity'] * 100
+                    st.markdown(f"**[{row['heading']}]({row['url']})**")
+                    st.progress(similarity_percentage / 100)
+                    st.write(f"Podobieństwo *semantyczne*: {similarity_percentage:.2f}%")
     
     st.sidebar.markdown("""
-    ---
     ### Asystent SEO
     Stworzony przez Aleksandra Skubałę.
     """)

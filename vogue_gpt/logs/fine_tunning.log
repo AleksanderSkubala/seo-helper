@@ -1,0 +1,91 @@
+3028536
+nohup: ignorin1/75 already done
+2/75 already done
+3/75 already done
+4/75 already done
+5/75 already done
+6/75 already done
+7/75 already done
+8/75 already done
+9/75 already done
+10/75 already done
+11/75 already done
+12/75 already done
+13/75 already done
+14/75 already done
+15/75 already done
+16/75 already done
+17/75 already done
+18/75 already done
+19/75 already done
+20/75 already done
+21/75 already done
+22/75 already done
+23/75 already done
+24/75 already done
+25/75 already done
+26/75 already done
+27/75 already done
+28/75 already done
+29/75 already done
+30/75 already done
+31/75 already done
+32/75 already done
+33/75 already done
+34/75 already done
+35/75 already done
+36/75 already done
+37/75 already done
+38/75 already done
+39/75 already done
+40/75 already done
+41/75 already done
+42/75 already done
+43/75 already done
+44/75 already done
+45/75 already done
+46/75 already done
+47/75 already done
+48/75 already done
+49/75 already done
+50/75 already done
+51/75 already done
+52/75 already done
+53/75 already done
+54/75 already done
+55/75 already done
+56/75 already done
+57/75 already done
+58/75 already done
+59/75 already done
+60/75 already done
+61/75 already done
+62/75 already done
+63/75 already done
+64/75 already done
+65/75 already done
+66/75 already done
+67/75 already done
+68/75 already done
+69/75 already done
+70/75 already done
+71/75 already done
+72/75 already done
+73/75 already done
+74/75 already done
+75/75 already done
+FileObject(id='file-Lt94w5RKxEGtMRbfVNFNCY', bytes=491033, created_at=1735269039, filename='fine_tuning_data.jsonl', object='file', purpose='fine-tune', status='processed', status_details=None)
+Traceback (most recent call last):
+  File "/home/askubala/vogue-poc/vogue_gpt/./fine_tunning.py", line 128, in <module>
+    fine_tune_model(FINE_TUNING_DATA_FILE)
+  File "/home/askubala/vogue-poc/vogue_gpt/./fine_tunning.py", line 94, in fine_tune_model
+    job_obj = client.fine_tuning.jobs.create(
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/resources/fine_tuning/jobs/jobs.py", line 150, in create
+    return self._post(
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/_base_client.py", line 1280, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/_base_client.py", line 957, in request
+    return self._request(
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/_base_client.py", line 1061, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Model gpt-4o-mini is not available for fine-tuning or does not exist.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}

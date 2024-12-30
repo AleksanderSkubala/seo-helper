@@ -1,0 +1,43 @@
+56273
+nohup: ignoring 1/25 already done
+2/25 already done
+3/25 already done
+4/25 already done
+5/25 already done
+6/25 already done
+7/25 already done
+8/25 already done
+9/25 already done
+10/25 already done
+11/25 already done
+12/25 already done
+13/25 already done
+14/25 already done
+15/25 already done
+16/25 already done
+17/25 already done
+18/25 already done
+19/25 already done
+20/25 already done
+21/25 already done
+22/25 already done
+23/25 already done
+24/25 already done
+25/25 already done
+FileObject(id='file-QQGHtx3zemQv5Q4mJnuQU6', bytes=142925, created_at=1735393290, filename='fine_tuning_data_2.jsonl', object='file', purpose='fine-tune', status='processed', status_details=None)
+Traceback (most recent call last):
+  File "/home/askubala/vogue-poc/vogue_gpt/fine_tunning.py", line 193, in <module>
+    fine_tune_model(FINE_TUNING_DATA_FILE)
+  File "/home/askubala/vogue-poc/vogue_gpt/fine_tunning.py", line 145, in fine_tune_model
+    job_obj = client.fine_tuning.jobs.create(
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/resources/fine_tuning/jobs/jobs.py", line 150, in create
+    return self._post(
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/_base_client.py", line 1280, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/_base_client.py", line 957, in request
+    return self._request(
+  File "/home/askubala/miniconda3/envs/vogue/lib/python3.9/site-packages/openai/_base_client.py", line 1061, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Model gpt-4o-mini is not available for fine-tuning or does not exist.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}
+
+ftjob-FB0nXqLRB8pCMAcReonnB9C5
